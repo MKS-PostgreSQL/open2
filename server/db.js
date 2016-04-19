@@ -1,16 +1,23 @@
 var mysql = require('mysql');
 var fs = require('fs');
-var dbconfig = require('./dbconfig');
 var bcrypt = require('bcrypt');
+var dotenv = require('dotenv').config();
 
 var db = mysql.createConnection({
-	host: dbconfig.host,
-	user: dbconfig.user,
-	password: dbconfig.password,
-	database: dbconfig.database,
-	multipleStatements: true
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_DB,
+  multipleStatements: true
 });
 
+db.connect(function (err) {
+  if(!err) {
+    console.log('Database is connected')
+  } else {
+    console.log('Error connecting to database')
+  }
+})
 
 db.on('error', function(){
 	console.log("ERROR in database");
@@ -18,25 +25,17 @@ db.on('error', function(){
 
 // Initial DB Setup when Server starts
 fs.readFile(__dirname + '/schema.sql', 'utf-8', function(err, data){
-	if (err) {
-		console.error(err);
-	} else {
-		data = data.split(";"); // Multiple statement work-around
-		data.pop();
-		data.forEach(function(item){
-			db.query(item, function(err, results, fields){
-				if (err) {
-					console.error(err);
-				} else {
-					console.log('SQL Setup');
-				}
-			});
-		});
-	}
+  var commands = data.split(";");
+  commands.pop();
+  commands.forEach(function(command){
+    db.query(command, function(err, results){
+      if (err){
+        console.error(err);
+      }
+    })
+  })
 });
 
-setInterval(function(){
-	db.query('SELECT 1')
-}, 5000);
+setInterval(function () { db.query('SELECT 1') }, 5000);
 
 module.exports = db;
