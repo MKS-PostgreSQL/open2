@@ -2,11 +2,11 @@
 client/bower_components
 
 ### node ###
-server/node_modules
+node_modules
 
 
 ### DATABASE ###
-server/dbconfig.js
+*.env
 
 ### assets ###
 client/assets
