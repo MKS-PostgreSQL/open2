@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS `Attendance` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `user_id` INTEGER NOT NULL,
     `event_id` INTEGER NOT NULL,
+    `created_by` BOOLEAN NOT NULL,
     PRIMARY KEY(`id`),
     FOREIGN KEY(`user_id`) REFERENCES Users(`id`),
     FOREIGN KEY(`event_id`) REFERENCES Events(`id`)
