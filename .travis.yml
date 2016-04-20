@@ -1,4 +1,4 @@
 language: node_js
 node_js:
-  - 4
+  - 5
 script: cd client && npm install && npm test && cd ../server && npm install && npm test
