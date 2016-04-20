@@ -113,9 +113,9 @@ router.post('/join', function (request, response) {
 
 router.put('/logout', function (request, response) {
   var username = request.body.username
-  db.query('UPDATE Users SET Users.online = NOT Users.online WHERE Users.username = ?;', 
+  db.query('UPDATE Users SET Users.online = NOT Users.online WHERE Users.username = ?;',
     [username], function (err, rows) {
-      if(err) {
+      if (err) {
         console.error(err)
       } else {
         response.sendStatus(201)
