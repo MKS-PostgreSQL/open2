@@ -11,6 +11,7 @@ app.use(cors())
 router.post('/homepage', function (request, response) {
   var username = request.body.username
   var password = request.body.password
+  var location = request.body.location
 
   db.query('SELECT * FROM Users WHERE `username` = ?;', [username], function (err, rows) {
     console.log('This is our password in our db', rows[0].password)
@@ -21,9 +22,26 @@ router.post('/homepage', function (request, response) {
       throw err
     } else {
       if (!bcrypt.compareSync(password, rows[0].password)) {
+        response.sendStatus(500)
         console.log('Incorrect password')
       } else {
-        response.send('/dashboard')
+        db.query('UPDATE Users SET Users.location = ? WHERE Users.username = ?;',
+          [location, username],
+          function (err, rows) {
+            if (err) {
+              console.error(err)
+            } else {
+              db.query('UPDATE Users SET Users.online = NOT Users.online WHERE Users.username = ?;',
+                [username],
+                function (err, rows) {
+                  if (err) {
+                    console.error(err)
+                  } else {
+                    response.send('/dashboard')
+                  }
+                })
+            }
+          })
       }
     }
   })
