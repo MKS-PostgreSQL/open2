@@ -7,7 +7,8 @@ var router = express.Router()
 
 var app = express()
 app.use(cors())
-app.use(bodyParser())
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 router.post('/events', function (request, response) {
   console.log('inside dashboard username', request.body.username)
