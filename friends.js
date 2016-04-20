@@ -25,4 +25,11 @@ router.post('/request', function (req, res) {
   })
 })
 
+//retrieve a list of all usernames for search function
+router.get('/friends/users', function (req, res) {
+  var username = req.headers.username
+  var select = 'SELECT Users.username, Users.online FROM Users ' +
+  'WHERE Users.username != ?;'
+  db.query(select, [username], sendData(res, 404))
+})
 module.exports = router
