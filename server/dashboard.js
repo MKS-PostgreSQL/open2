@@ -88,7 +88,7 @@ router.get('/friends', function (request, response) {
 })
 
 router.post('/join', function (request, response) {
-  var username = request.body.user
+  var username = request.body.username
   var id = request.body.eventId
 
   db.query('SELECT id FROM Users WHERE `username` = ?;', [username], function (err, rows) {
@@ -109,6 +109,18 @@ router.post('/join', function (request, response) {
       })
     }
   })
+})
+
+router.put('/logout', function (request, response) {
+  var username = request.body.username
+  db.query('UPDATE Users SET Users.online = NOT Users.online WHERE Users.username = ?;', 
+    [username], function (err, rows) {
+      if(err) {
+        console.error(err)
+      } else {
+        response.sendStatus(201)
+      }
+    })
 })
 
 module.exports = router
