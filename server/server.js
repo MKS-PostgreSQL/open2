@@ -18,7 +18,7 @@ var dashboard = require('./dashboard')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, '/../client')))
-app.use(morgan('dev'));
+app.use(morgan('dev'))
 
 app.use('/index', index)
 app.use('/signup', signup)
