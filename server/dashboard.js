@@ -117,7 +117,7 @@ router.put('/logout', function (request, response) {
       if(err) {
         console.error(err)
       } else {
-        console.log(rows)
+        response.sendStatus(201)
       }
     })
 })
