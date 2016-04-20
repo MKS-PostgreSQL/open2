@@ -7,7 +7,8 @@ var router = express.Router()
 
 var app = express()
 app.use(cors())
-app.use(bodyParser())
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 router.post('/events', function (request, response) {
   console.log('inside dashboard username', request.body.username)
@@ -15,7 +16,7 @@ router.post('/events', function (request, response) {
   var timestamp = request.body.time
   var username = request.body.username
 
-  var events = {eventname: event, timestamp: timestamp}
+  var events = {eventname: event, createdAt: timestamp}
 
   // this will send a text message to the "to" user
   // get twilio trial account to get a phone number which sends texts from "from"
@@ -43,7 +44,7 @@ router.post('/events', function (request, response) {
             } else {
               var userId = rows[0].id
 
-              addUserEvents(userId, eventId, true)
+              addUserEvents(userId, eventId, 1)
             }
           })
         }
@@ -55,7 +56,7 @@ router.post('/events', function (request, response) {
 var addUserEvents = function (creator, eventId, status) {
   var userEvents = {user_id: creator, event_id: eventId, created_by: status}
   console.log(userEvents)
-  db.query('INSERT INTO UserEvents SET ?', userEvents, function (err, results) {
+  db.query('INSERT INTO Attendance SET ?', userEvents, function (err, results) {
     if (err) {
       console.log(err)
     } else {
@@ -65,7 +66,7 @@ var addUserEvents = function (creator, eventId, status) {
 }
 
 router.get('/upload', function (request, response) {
-  db.query('SELECT Users.username, Events.eventname, Events.timestamp, UserEvents.id, UserEvents.created_by FROM Users INNER JOIN UserEvents ON Users.id = UserEvents.user_id INNER JOIN Events ON Events.id = UserEvents.event_id ORDER BY event_id', function (err, rows) {
+  db.query('SELECT Users.username, Events.eventname, Events.createdAt, Attendance.id, Attendance.created_by FROM Users INNER JOIN Attendance ON Users.id = Attendance.user_id INNER JOIN Events ON Events.id = Attendance.event_id ORDER BY event_id', function (err, rows) {
     if (err) {
       throw err
     } else {
@@ -75,6 +76,7 @@ router.get('/upload', function (request, response) {
   })
 })
 
+// Not actually getting user's friends
 router.get('/friends', function (request, response) {
   db.query('SELECT username FROM Users', function (err, results) {
     if (err) {
@@ -97,13 +99,13 @@ router.post('/join', function (request, response) {
       console.log('INSIDE JOIN POST', rows[0].id)
       var userId = rows[0].id
 
-      db.query('SELECT event_id FROM UserEvents WHERE `id` = ?;', [id], function (err, rows) {
+      db.query('SELECT event_id FROM Attendance WHERE `id` = ?;', [id], function (err, rows) {
         if (err) {
           throw err
         } else {
-          console.log('INSIDE POST USEREVENts', rows[0].event_id)
+          console.log('User successfully joins through eventId: ', rows[0].event_id)
           var eventId = rows[0].event_id
-          addUserEvents(userId, eventId, false)
+          addUserEvents(userId, eventId, 0)
         }
       })
     }
@@ -112,9 +114,9 @@ router.post('/join', function (request, response) {
 
 router.put('/logout', function (request, response) {
   var username = request.body.username
-  db.query('UPDATE Users SET Users.online = NOT Users.online WHERE Users.username = ?;', 
+  db.query('UPDATE Users SET Users.online = NOT Users.online WHERE Users.username = ?;',
     [username], function (err, rows) {
-      if(err) {
+      if (err) {
         console.error(err)
       } else {
         response.sendStatus(201)
