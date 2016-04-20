@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS `Users` (
     `location` VARCHAR(100) NULL DEFAULT NULL,
     `name` VARCHAR(25) NULL DEFAULT NULL,
     `username` VARCHAR(25) NULL DEFAULT NULL,
-    `password` VARCHAR(25) NULL DEFAULT NULL,
+    `password` VARCHAR(100) NULL DEFAULT NULL,
     `email` VARCHAR(25) NULL DEFAULT NULL,
     PRIMARY KEY(`id`),
     UNIQUE (`username`)
