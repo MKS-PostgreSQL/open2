@@ -4,7 +4,6 @@ var cors = require('cors')
 // var dotenv = require('dotenv')
 var path = require('path')
 var morgan = require('morgan')
-dotenv.config()
 
 var app = express()
 
