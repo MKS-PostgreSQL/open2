@@ -2,8 +2,8 @@
   "name": "open2",
   "version": "1.0.0",
   "description": "open2",
-  "main": "index.js",
   "scripts": {
+    "start": "node server.js",
     "test": "standard"
   },
   "author": "",
@@ -21,5 +21,8 @@
   },
   "devDependencies": {
     "standard": "^6.0.8"
+  },
+  "standard": {
+    "globals": ["angular"]
   }
 }
