@@ -87,7 +87,7 @@ app.controller('dashboardCtrl', function ($scope, Services, $mdDialog, $mdMedia,
             {
               'eventname': item.eventname,
               'id': item.id,
-              'timestamp': item.timestamp,
+              'timestamp': item.createdAt,
               'username': item.username,
               'createdBy': item.created_by,
               'status': 'unjoin'
@@ -96,7 +96,7 @@ app.controller('dashboardCtrl', function ($scope, Services, $mdDialog, $mdMedia,
           myEvents.push({
             'eventname': item.eventname,
             'id': item.id,
-            'timestamp': item.timestamp,
+            'timestamp': item.createdAt,
             'username': item.username,
             'createdBy': item.created_by,
             'status': 'created by me'
@@ -111,7 +111,7 @@ app.controller('dashboardCtrl', function ($scope, Services, $mdDialog, $mdMedia,
           eventsToJoin.push({
             'eventname': item.eventname,
             'id': item.id,
-            'timestamp': item.timestamp,
+            'timestamp': item.createdAt,
             'username': item.username,
             'createdBy': item.created_by,
             'status': 'join'
@@ -138,13 +138,13 @@ app.controller('dashboardCtrl', function ($scope, Services, $mdDialog, $mdMedia,
       $route.reload()
     } else if (status === 'unjoin') {
       // delete the record about user's attendance from database
-      Services.unjoinEvent(id) // this doesn't work for come reason.
+      Services.unjoinEvent(id) // this doesn't work for some reason.
     }
   }
 
   Services.uploadFriendslist()
     .then(function (data) {
-      // console.log("friendslist i got from server ", data.data)
+      // console.log("friendslist I got from server ", data.data)
       $scope.friends = data.data
     })
 
@@ -171,19 +171,19 @@ app.controller('dashboardCtrl', function ($scope, Services, $mdDialog, $mdMedia,
   // this the end of our pop up dialog box.
 
   $scope.time = {
-    value: new Date(2016, 3, 9)
+    value: new Date(2016, 3, 9) // fix timestamp
   } // end of our time selector
 
   $scope.click = function () {
     var eventInfo = {
       'event': $scope.user.activity,
-      'time': $scope.time.value,
+      'time': $scope.time.value, // fix timestamp
       'username': window.localStorage.getItem('username')
     }
 
     Services.eventsPost(eventInfo)
       .then(function (respData) {
-        // console.log('i got this back from server/database', respData)
+        // console.log('I got this back from server/database', respData)
         $route.reload() //
       })
   }
@@ -242,7 +242,7 @@ app.factory('Services', function ($http, $location) {
       })
       .catch(function (err) {
         $location.path('/')
-        console.log(err)
+        console.error(err)
       })
   }
 
@@ -284,7 +284,7 @@ app.factory('Services', function ($http, $location) {
     })
   }
 
-  // get freinds list
+  // get freinds list --> needs to be fixed
   var uploadFriendslist = function () {
     return $http({
       method: 'GET',
