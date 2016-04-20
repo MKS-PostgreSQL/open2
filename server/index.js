@@ -2,7 +2,7 @@ var express = require('express')
 var db = require('./db.js')
 var cors = require('cors')
 var router = express.Router()
-var bcrypt = require('bcrypt-nodejs')
+var bcrypt = require('bcrypt')
 
 var app = express()
 app.use(cors())
