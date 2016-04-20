@@ -220,7 +220,13 @@ app.factory('Services', function ($http, $location) {
   // logout
 
   var logout = function () {
-    $location.path('/')
+    return $http({
+      method: 'PUT', 
+      url: 'http://localhost:8080/dashboard/logout'
+    })
+      .then(function (resp) {
+        $location.path('/')
+      })
   }
 
   // signup

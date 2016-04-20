@@ -110,4 +110,16 @@ router.post('/join', function (request, response) {
   })
 })
 
+router.put('/logout', function (request, response) {
+  var username = request.body.user
+  db.query('UPDATE Users SET Users.online = NOT Users.online WHERE Users.username = ?;', 
+    [username], function (err, rows) {
+      if(err) {
+        console.error(err)
+      } else {
+        console.log(rows)
+      }
+    })
+})
+
 module.exports = router
