@@ -32,4 +32,22 @@ router.get('/friends/users', function (req, res) {
   'WHERE Users.username != ?;'
   db.query(select, [username], sendData(res, 404))
 })
+
+//retreive all friends of a user 
+router.get('/all', function (req, res) {
+  var username = req.headers.username
+  var usernameId
+  findUserId(username).then(function (id) {
+    usernameId = id
+  }).then(function () {
+    var select = 'SELECT u.username FROM Users u ' +
+    'INNER JOIN Friends f1 ' +
+    'ON f1.user_id = u.id ' +
+    'INNER JOIN Friends f2 ' +
+    'ON f2.user_id = f1.friend_id AND f2.friend_id = f1.user_id ' +
+    'WHERE f2.user_id =?;'
+    db.query(select, [usernameId], sendData(res))
+  })
+})
+
 module.exports = router
