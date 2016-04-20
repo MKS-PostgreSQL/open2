@@ -15,7 +15,6 @@ var index = require('./index')
 var signup = require('./signup')
 var dashboard = require('./dashboard')
 
-app.use(bodyParser())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, '/../client')))

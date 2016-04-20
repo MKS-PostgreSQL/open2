@@ -8,7 +8,8 @@ var router = express.Router()
 
 var app = express()
 app.use(cors())
-app.use(bodyParser())
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 // adds a new user to database
 router.post('/newuser', function (request, response) {
