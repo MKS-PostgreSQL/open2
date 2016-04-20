@@ -3,7 +3,7 @@ var bodyParser = require('body-parser')
 var cors = require('cors')
 var dotenv = require('dotenv')
 var path = require('path')
-
+var morgan = require('morgan')
 dotenv.config()
 
 var app = express()
@@ -18,6 +18,7 @@ var dashboard = require('./dashboard')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, '/../client')))
+app.use(morgan('dev'))
 
 app.use('/index', index)
 app.use('/signup', signup)
