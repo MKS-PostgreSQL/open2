@@ -290,9 +290,10 @@ app.factory('Services', function ($http, $location) {
   // 001
   // get freinds list --> needs to be fixed
   var uploadFriendslist = function () {
+    console.log(window.localStorage.getItem('username'))
     var config = {
       headers: {
-        username: '098'
+        username: window.localStorage.getItem('username')
       }
     }
 
