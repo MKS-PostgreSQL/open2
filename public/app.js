@@ -211,7 +211,7 @@ app.factory('Services', function ($http, $location) {
     console.log('User is logged in')
     return $http({
       method: 'POST',
-      url: 'http://localhost:8080/index/homepage',
+      url: '/index/homepage',
       data: user
     })
       .then(function (resp) {
@@ -229,7 +229,7 @@ app.factory('Services', function ($http, $location) {
     console.log('this is username in logout: ', username)
     return $http({
       method: 'POST',
-      url: 'http://localhost:8080/dashboard/logout',
+      url: '/dashboard/logout',
       data: username
     })
       .then(function (resp) {
@@ -243,7 +243,7 @@ app.factory('Services', function ($http, $location) {
     console.log('New user is signed up')
     return $http({
       method: 'POST',
-      url: 'http://localhost:8080/signup/newuser',
+      url: '/signup/newuser',
       data: user
     })
       .then(function (resp) {
@@ -259,7 +259,7 @@ app.factory('Services', function ($http, $location) {
   var uploadDashboard = function () {
     return $http({
       method: 'GET',
-      url: 'http://localhost:8080/dashboard/upload'
+      url: '/dashboard/upload'
     })
       .then(function (resp) {
         // console.log("data in uploadDashboard", resp.data)
@@ -271,7 +271,7 @@ app.factory('Services', function ($http, $location) {
   var notify = function (sendText) {
     return $http({
       method: 'POST',
-      url: 'http://localhost:8080/dashboard',
+      url: '/dashboard',
       data: sendText
     })
       .then(function (data) {
@@ -288,7 +288,7 @@ app.factory('Services', function ($http, $location) {
     // console.log('eventinfo inside events post', eventInfo)
     return $http({
       method: 'POST',
-      url: 'http://localhost:8080/dashboard/events',
+      url: '/dashboard/events',
       data: eventInfo
     })
   }
@@ -297,7 +297,7 @@ app.factory('Services', function ($http, $location) {
   var uploadFriendslist = function () {
     return $http({
       method: 'GET',
-      url: 'http://localhost:8080/dashboard/friends'
+      url: '/dashboard/friends'
     })
   }
 
@@ -305,7 +305,7 @@ app.factory('Services', function ($http, $location) {
   var joinEvent = function (eventId) {
     return $http({
       method: 'POST',
-      url: 'http://localhost:8080/dashboard/join',
+      url: '/dashboard/join',
       data: eventId
     })
   }
@@ -314,7 +314,7 @@ app.factory('Services', function ($http, $location) {
   var unjoinEvent = function (userEventId) {
     return $http({
       method: 'POST',
-      url: 'http://localhost:8080/dashboard/unjoin',
+      url: '/dashboard/unjoin',
       data: userEventId
     })
   }
