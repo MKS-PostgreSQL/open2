@@ -144,8 +144,8 @@ app.controller('dashboardCtrl', function ($scope, Services, $mdDialog, $mdMedia,
 
   Services.uploadFriendslist()
     .then(function (data) {
-      // console.log("friendslist I got from server ", data.data)
-      $scope.friends = data.data
+      var friendsArr = data.data.data
+      $scope.friends = friendsArr
     })
 
   // this is our pop up dialog box
@@ -287,10 +287,13 @@ app.factory('Services', function ($http, $location) {
 
   // get freinds list --> needs to be fixed
   var uploadFriendslist = function () {
-    return $http({
-      method: 'GET',
-      url: 'http://localhost:8080/dashboard/friends'
-    })
+    var config = {
+      headers: {
+        username: '098'
+      }
+    }
+
+    return $http.get('http://localhost:8080/friends/all', config)
   }
 
   // add a record to database when user joins an event
