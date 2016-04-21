@@ -112,7 +112,7 @@ router.post('/join', function (request, response) {
   })
 })
 
-router.put('/logout', function (request, response) {
+router.post('/logout', function (request, response) {
   var username = request.body.username
   db.query('UPDATE Users SET Users.online = NOT Users.online WHERE Users.username = ?;',
     [username], function (err, rows) {
