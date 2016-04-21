@@ -1,31 +1,42 @@
 var express = require('express')
 var router = express.Router()
 var db = require('./db.js')
-var sendError = require('./helpers.js').sendError
-var sendSuccess = require('./helpers.js').sendSuccess
 var sendData = require('./helpers.js').sendData
 var postData = require('./helpers.js').postData
 var findUserId = require('./helpers.js').findUserId
 
-//send a friend request to a user or accept a friend request
+// send a friend request to a user or accept a friend request
 router.post('/request', function (req, res) {
   var username = req.headers.username
   var friend = req.body.friend
   var usernameId
   var friendId
+  var select = 'SELECT Friends.id FROM Friends WHERE Friends.user_id = ? AND Friends.friend_id = ?;'
+  var insert = 'INSERT INTO Friends SET `user_id` = ?, `friend_id` = ?;'
   findUserId(username).then(function (id) {
     usernameId = id
   }).then(function () {
     findUserId(friend).then(function (id) {
       friendId = id
     }).then(function () {
-      var insert = 'INSERT INTO Friends SET `user_id` = ?, `friend_id` = ?;'
-      db.query(insert, [usernameId, friendId], postData(res))
+      // check if there is a pending request
+      db.query(select, [usernameId, friendId], function (err, rows) {
+        if (err) {
+          console.error(err)
+        } else {
+          if (!rows.length) {
+            // Send a friend request or accept a friend request
+            db.query(insert, [usernameId, friendId], postData(res))
+          } else {
+            res.status(500).json({success: false})
+          }
+        }
+      })
     })
   })
 })
 
-//retrieve a list of all usernames for search function
+// retrieve a list of all usernames for search function
 router.get('/users', function (req, res) {
   var username = req.headers.username
   var select = 'SELECT Users.username, Users.name, Users.online FROM Users ' +
@@ -33,7 +44,7 @@ router.get('/users', function (req, res) {
   db.query(select, [username], sendData(res, 404))
 })
 
-//retreive all friends of a user 
+// retreive all friends of a user
 router.get('/all', function (req, res) {
   var username = req.headers.username
   var usernameId
