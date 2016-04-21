@@ -14,9 +14,9 @@
 </div>
 <!-- nav bar end -->
 
-<section layout="row" flex>
 
-<!-- friends list -->
+<section layout="row" flex>
+  <!-- friends list -->
   <md-sidenav class="md-sidenav-left" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')" md-disable-backdrop md-whiteframe="4">
     <md-toolbar class="md-theme-indigo" ng-controller="LeftCtrl">
       <h3 class= "open" ng-click="close()" >my friends</h3>
@@ -25,59 +25,55 @@
       <ul ng-controller = 'dashboardCtrl' >
         <div ng-repeat = 'friend in friends'>
           <md-card-title-text>
-          <img src="http://portal.stickntrack.com/images/profile.jpg" alt="Mountain View" style="width:50px;height:50px;" />
-          <span class="md-headline font">{{friend.username}}</span>
+            <img src="http://portal.stickntrack.com/images/profile.jpg" alt="Mountain View" style="width:50px;height:50px;">
+            <span class="md-headline font">{{friend.username}}</span>
           </md-card-title-text>
         </div>
       </ul>
     </md-content>
   </md-sidenav>
-<!-- friends list end --> 
+  <!-- end of friends list -->
+     <md-content flex layout-padding>
+       <div layout="column" layout-fill layout-align="top center">
 
-   <md-content flex layout-padding>
-     <div layout="column" layout-fill layout-align="top center">
+       <!-- notification Box -->
+  <div id = 'eventContainer' ng-controller="SubheaderAppCtrl" layout="column" flex layout-fill ng-cloak>
+    <md-toolbar>
+      <div class="md-toolbar-tools open" style="font-size: 30px;">my events</div>
+    </md-toolbar>
+    <md-content md-theme="altTheme">
+    <div ng-controller='dashboardCtrl'>
+    <div ng-if='events.fetch'>
+      <ul flex id = 'eventsList' class = 'font'>
+      <h4 class = 'font'> New Events </h4>
+        <li ng-repeat="event in events.list | reverse" style = "list-style: none">
+          <span style = "font-weight: bold" class = 'font' > {{event.username}} wants to {{ event.eventname}} </span>
+          <span> {{event.timestamp.slice(11, 19)}}</span>
 
-     <!-- notification Box -->
-<div id = 'eventContainer' ng-controller="SubheaderAppCtrl" layout="column" flex layout-fill ng-cloak>
-  <md-toolbar>
-    <div class="md-toolbar-tools open" style="font-size: 30px;">my events</div>
-  </md-toolbar>
-  <md-content md-theme="altTheme">
+          <md-button   ng-click="join(event.id, event.status)" class="md-warn md-raised md-hue-2" class = 'font'> {{event.status}} </md-button>
+         </li>
+  </ul>
 
-  <div ng-controller='dashboardCtrl'>
-  <div ng-if='events.fetch'>
+   <ul flex id = 'eventsIgoTo'>
+   <h4 class = 'font'> Attending! </h4>
+        <li ng-repeat="event in events.eventsIgoTo | reverse" style = "list-style: none">
+          <span style = "font-weight: bold" class = 'font' > I want to {{ event.eventname}} </span>
+          <span> {{event.timestamp.slice(11, 19)}}  </span>
 
-    <ul flex id = 'eventsList' class = 'font'>
-    <h4 class = 'font'> New Events </h4>
-      <li ng-repeat="event in events.list | reverse" style = "list-style: none">
-        <span style = "font-weight: bold" class = 'font' > {{event.username}} wants to {{ event.eventname}} </span>
-        <span> {{event.timestamp.slice(11, 19)}}</span>
+          <md-button   ng-click="join(event.id, event.status)" class="md-warn md-raised md-hue-2 font"> {{event.status}}</md-button>
+         </li>
 
-        <md-button   ng-click="join(event.id, event.status)" class="md-warn md-raised md-hue-2" class = 'font'> {{event.status}} </md-button>
-       </li>
+  </ul>
 
-</ul>
-
- <ul flex id = 'eventsIgoTo'>
- <h4 class = 'font'> Attending! </h4>
-      <li ng-repeat="event in events.eventsIgoTo | reverse" style = "list-style: none">
-        <span style = "font-weight: bold" class = 'font' > I want to {{ event.eventname}} </span>
-        <span> {{event.timestamp.slice(11, 19)}}  </span>
-
-        <md-button   ng-click="join(event.id, event.status)" class="md-warn md-raised md-hue-2 font"> {{event.status}}</md-button>
-       </li>
-
-</ul>
-
+    </div>
+    </div>
+    </md-content>
   </div>
-  </div>
-  </md-content>
-</div>
-<!-- Notification END -->
+  <!-- Notification END -->
 
-     </div>
+       </div>
 
-   </md-content>
+     </md-content>
 
  </section>
  </div>
