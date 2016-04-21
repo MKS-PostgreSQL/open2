@@ -1,15 +1,10 @@
 var express = require('express')
 var bodyParser = require('body-parser')
 var cors = require('cors')
+var dotenv = require('dotenv')
 var path = require('path')
 var morgan = require('morgan')
-
-console.log('Deployed:', process.env.DEPLOYED)
-if (process.env.DEPLOYED !== true) {
-  console.log('Not On Heroku -> Using ENV File Instead')
-  var dotenv = require('dotenv')
-  dotenv.config()
-}
+dotenv.config()
 
 var app = express()
 
@@ -31,4 +26,4 @@ app.use('/dashboard', dashboard)
 
 var port = process.env.PORT || 8080
 
-app.listen(port, console.log('Magic happens on', port))
+app.listen(port, console.log('Magic happens on 8080'))
