@@ -3,10 +3,16 @@ var app = angular.module('myApp', ['ngMaterial', 'ngRoute', 'ngMessages', 'uiGma
 app.controller("ChatController", function($scope) {
   $scope.messages = []
   var socket = io.connect('localhost:8080')
+
+  socket.on('refresh', function (data) {
+    $scope.messages = data.messages
+  })
+
   socket.on('newMessage', function (data) {
     $scope.messages.push(data.message)
-    console.log($scope.messages)
+    $scope.$apply()
   })
+
   $scope.sendMessage = function () {
     socket.emit('sendMessage', {message: $scope.newMessage})
     $scope.newMessage = ''

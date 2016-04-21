@@ -27,12 +27,34 @@ app.use('/dashboard', dashboard)
 
 var port = process.env.PORT || 8080
 
-http.listen(port, console.log('Magic happens on 8080'))
+var db = 'not yet initialized'
+http.listen(port, function() {
+  console.log('Magic happens on 8080')
+  db = require('./db.js')
+})
 
-var messages = []
 io.on('connection', function(socket) {
+  var messages = []
+
+  db.query('SELECT message FROM Messages', function (err, rows) {
+    if (err) {
+      console.log(err)
+    } else {
+      rows.forEach(function (value) {
+        messages.push(value.message)
+      })
+    }
+    socket.emit('refresh', {messages: messages})
+  })
+
   socket.on('sendMessage', function (data) {
     messages.push(data.message)
-    socket.emit('newMessage', {message: data.message})
+    db.query('INSERT INTO Messages (event_id, author_id, message) VALUES (1, 1, ?)', data.message, function(err, rows) {
+      if (err) {
+        console.log(err);
+      } else {
+        socket.emit('newMessage', {message: data.message})
+      }
+    })
   })
 })
