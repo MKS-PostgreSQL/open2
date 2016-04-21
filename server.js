@@ -1,10 +1,14 @@
 var express = require('express')
 var bodyParser = require('body-parser')
 var cors = require('cors')
-var dotenv = require('dotenv')
 var path = require('path')
 var morgan = require('morgan')
-dotenv.config()
+
+console.log(process.env.DEPLOYED)
+if (process.env.DEPLOYED === false) {
+  var dotenv = require('dotenv')
+  dotenv.config()
+}
 
 var app = express()
 
