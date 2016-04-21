@@ -28,7 +28,7 @@ router.post('/request', function (req, res) {
 //retrieve a list of all usernames for search function
 router.get('/friends/users', function (req, res) {
   var username = req.headers.username
-  var select = 'SELECT Users.username, Users.online FROM Users ' +
+  var select = 'SELECT Users.username, Users.name, Users.online FROM Users ' +
   'WHERE Users.username != ?;'
   db.query(select, [username], sendData(res, 404))
 })
@@ -40,7 +40,7 @@ router.get('/all', function (req, res) {
   findUserId(username).then(function (id) {
     usernameId = id
   }).then(function () {
-    var select = 'SELECT u.username FROM Users u ' +
+    var select = 'SELECT u.username, u.name, u.online FROM Users u ' +
     'INNER JOIN Friends f1 ' +
     'ON f1.user_id = u.id ' +
     'INNER JOIN Friends f2 ' +
