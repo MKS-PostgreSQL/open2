@@ -6,7 +6,6 @@ var express = require('express')
 var app = require('express')()
 var http = require('http').Server(app)
 var io = require('socket.io')(http)
-dotenv.config()
 
 if (!process.env.DEPLOYED) {
   var dotenv = require('dotenv')
@@ -32,32 +31,43 @@ app.use('/dashboard', dashboard)
 var port = process.env.PORT || 8080
 
 var db = 'not yet initialized'
-http.listen(port, function() {
+http.listen(port, function () {
   console.log('Magic happens on 8080')
   db = require('./db.js')
 })
 
-io.on('connection', function(socket) {
+io.on('connection', function (socket) {
   var messages = []
 
-  db.query('SELECT message FROM Messages', function (err, rows) {
+  db.query('SELECT Messages.message, Users.username FROM Messages LEFT JOIN Users ON Messages.author_id=Users.id', function (err, rows) {
     if (err) {
       console.log(err)
     } else {
       rows.forEach(function (value) {
-        messages.push(value.message)
+        messages.push({
+          author: value.username,
+          text: value.message
+        })
       })
     }
-    socket.emit('refresh', {messages: messages})
+    socket.emit('refresh', {messages})
   })
 
   socket.on('sendMessage', function (data) {
-    messages.push(data.message)
-    db.query('INSERT INTO Messages (event_id, author_id, message) VALUES (1, 1, ?)', data.message, function(err, rows) {
+    messages.push({author: data.author, text: data.text})
+
+    db.query('SELECT id FROM Users WHERE username = ?', [data.author], function (err, rows) {
       if (err) {
-        console.log(err);
+        console.log(err)
       } else {
-        socket.emit('newMessage', {message: data.message})
+        console.log(rows[0])
+        db.query('INSERT INTO Messages (event_id, author_id, message) VALUES (1, ?, ?)', [rows[0].id, data.text], function (err, rows) {
+          if (err) {
+            console.log(err)
+          } else {
+            socket.emit('newMessage', {author: data.author, text: data.text})
+          }
+        })
       }
     })
   })

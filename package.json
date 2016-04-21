@@ -24,7 +24,7 @@
     "standard": "^6.0.8"
   },
   "standard": {
-    "globals": ["angular"],
+    "globals": ["angular", "io"],
     "ignore": [
       "scripts"
     ]

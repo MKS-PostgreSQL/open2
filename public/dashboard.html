@@ -41,7 +41,7 @@
 
      <div class="chatroom" ng-controller="ChatController">
        <ul>
-         <li ng-repeat="message in messages track by $index"> {{ message }} </li>
+         <li ng-repeat="message in messages track by $index"> {{ message.author }}: {{ message.text }} </li>
        </ul>
        <form>
          <input ng-model="newMessage" type="text" placeholder="Enter a message">

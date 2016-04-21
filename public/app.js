@@ -1,6 +1,6 @@
 var app = angular.module('myApp', ['ngMaterial', 'ngRoute', 'ngMessages', 'uiGmapgoogle-maps'])
 
-app.controller("ChatController", function($scope) {
+app.controller('ChatController', function ($scope) {
   $scope.messages = []
   var socket = io.connect('localhost:8080')
 
@@ -9,12 +9,15 @@ app.controller("ChatController", function($scope) {
   })
 
   socket.on('newMessage', function (data) {
-    $scope.messages.push(data.message)
+    $scope.messages.push(data)
     $scope.$apply()
   })
 
   $scope.sendMessage = function () {
-    socket.emit('sendMessage', {message: $scope.newMessage})
+    socket.emit('sendMessage', {
+      author: window.localStorage.getItem('username'),
+      text: $scope.newMessage
+    })
     $scope.newMessage = ''
   }
 })
