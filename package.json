@@ -17,13 +17,14 @@
     "fs": "0.0.2",
     "morgan": "^1.7.0",
     "mysql": "^2.10.2",
+    "socket.io": "^1.4.5",
     "twilio": "^2.9.1"
   },
   "devDependencies": {
     "standard": "^6.0.8"
   },
   "standard": {
-    "globals": ["angular"],
+    "globals": ["angular", "io"],
     "ignore": [
       "scripts"
     ]

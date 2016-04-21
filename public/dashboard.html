@@ -18,56 +18,73 @@
 <section layout="row" flex>
   <!-- friends list -->
   <md-sidenav class="md-sidenav-left" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')" md-disable-backdrop md-whiteframe="4">
-    <md-toolbar class="md-theme-indigo" ng-controller="LeftCtrl">
-      <h3 class= "open" ng-click="close()" >my friends</h3>
-    </md-toolbar>
-    <md-content layout-padding ng-controller="LeftCtrl">
-      <ul ng-controller = 'dashboardCtrl' >
-        <div ng-repeat = 'friend in friends'>
-          <md-card-title-text>
-            <img src="http://portal.stickntrack.com/images/profile.jpg" alt="Mountain View" style="width:50px;height:50px;">
-            <span class="md-headline font">{{friend.username}}</span>
-          </md-card-title-text>
-        </div>
-      </ul>
-    </md-content>
-  </md-sidenav>
-  <!-- end of friends list -->
-     <md-content flex layout-padding>
-       <div layout="column" layout-fill layout-align="top center">
+  <md-toolbar class="md-theme-indigo" ng-controller="LeftCtrl">
+     <h3 class= "open" ng-click="close()" >my friends</h3>
+  </md-toolbar>
+  <md-content layout-padding ng-controller="LeftCtrl">
+    <ul ng-controller = 'dashboardCtrl' >
+    <div ng-repeat = 'friend in friends'>
+  </md-card-title-media>
+  <md-card-title-text>
+    <img src="http://portal.stickntrack.com/images/profile.jpg" alt="Mountain View" style="width:50px;height:50px;"><span class="md-headline font">{{friend.username}}</span>
+  </md-card-title-text>
+     </md-card-title>
+    </md-card>
+  </div>
+</ul>
 
-       <!-- notification Box -->
-  <div id = 'eventContainer' ng-controller="SubheaderAppCtrl" layout="column" flex layout-fill ng-cloak>
-    <md-toolbar>
-      <div class="md-toolbar-tools open" style="font-size: 30px;">my events</div>
-    </md-toolbar>
-    <md-content md-theme="altTheme">
-    <div ng-controller='dashboardCtrl'>
-    <div ng-if='events.fetch'>
-      <ul flex id = 'eventsList' class = 'font'>
-      <h4 class = 'font'> New Events </h4>
-        <li ng-repeat="event in events.list | reverse" style = "list-style: none">
-          <span style = "font-weight: bold" class = 'font' > {{event.username}} wants to {{ event.eventname}} </span>
-          <span> {{event.timestamp.slice(11, 19)}}</span>
+  </md-content>
+   </md-sidenav>
 
-          <md-button   ng-click="join(event.id, event.status)" class="md-warn md-raised md-hue-2" class = 'font'> {{event.status}} </md-button>
-         </li>
-  </ul>
+   <md-content flex layout-padding>
 
-   <ul flex id = 'eventsIgoTo'>
-   <h4 class = 'font'> Attending! </h4>
-        <li ng-repeat="event in events.eventsIgoTo | reverse" style = "list-style: none">
-          <span style = "font-weight: bold" class = 'font' > I want to {{ event.eventname}} </span>
-          <span> {{event.timestamp.slice(11, 19)}}  </span>
+     <!-- chatroom -->
 
-          <md-button   ng-click="join(event.id, event.status)" class="md-warn md-raised md-hue-2 font"> {{event.status}}</md-button>
-         </li>
+     <div class="chatroom" ng-controller="ChatController">
+       <ul>
+         <li ng-repeat="message in messages track by $index"> {{ message.author }}: {{ message.text }} </li>
+       </ul>
+       <form>
+         <input ng-model="newMessage" type="text" placeholder="Enter a message">
+         <button ng-click="sendMessage()">Send</button>
+       </form>
+     </div>
 
-  </ul>
+     <div layout="column" layout-fill layout-align="top center">
 
-    </div>
-    </div>
-    </md-content>
+     <!-- notification Box -->
+<div id = 'eventContainer' ng-controller="SubheaderAppCtrl" layout="column" flex layout-fill ng-cloak>
+  <md-toolbar>
+    <div class="md-toolbar-tools open" style="font-size: 30px;">my events</div>
+  </md-toolbar>
+  <md-content md-theme="altTheme">
+
+  <div ng-controller='dashboardCtrl'>
+  <div ng-if='events.fetch'>
+
+    <ul flex id = 'eventsList' class = 'font'>
+    <h4 class = 'font'> New Events </h4>
+      <li ng-repeat="event in events.list | reverse" style = "list-style: none">
+        <span style = "font-weight: bold" class = 'font' > {{event.username}} wants to {{ event.eventname}} </span>
+        <span> {{event.timestamp.slice(11, 19)}}</span>
+
+        <md-button   ng-click="join(event.id, event.status)" class="md-warn md-raised md-hue-2" class = 'font'> {{event.status}} </md-button>
+       </li>
+
+</ul>
+
+ <ul flex id = 'eventsIgoTo'>
+ <h4 class = 'font'> Attending! </h4>
+      <li ng-repeat="event in events.eventsIgoTo | reverse" style = "list-style: none">
+        <span style = "font-weight: bold" class = 'font' > I want to {{ event.eventname}} </span>
+        <span> {{event.timestamp.slice(11, 19)}}  </span>
+
+        <md-button   ng-click="join(event.id, event.status)" class="md-warn md-raised md-hue-2 font"> {{event.status}}</md-button>
+       </li>
+
+</ul>
+
+  </div>
   </div>
   <!-- Notification END -->
 
