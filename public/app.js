@@ -1,4 +1,27 @@
 var app = angular.module('myApp', ['ngMaterial', 'ngRoute', 'ngMessages', 'uiGmapgoogle-maps'])
+
+app.controller('ChatController', function ($scope) {
+  $scope.messages = []
+  var socket = io.connect('localhost:8080')
+
+  socket.on('refresh', function (data) {
+    $scope.messages = data.messages
+  })
+
+  socket.on('newMessage', function (data) {
+    $scope.messages.push(data)
+    $scope.$apply()
+  })
+
+  $scope.sendMessage = function () {
+    socket.emit('sendMessage', {
+      author: window.localStorage.getItem('username'),
+      text: $scope.newMessage
+    })
+    $scope.newMessage = ''
+  }
+})
+
 app.config(function ($mdThemingProvider) {
   $mdThemingProvider.definePalette('Open2Pallete', {
     '50': 'FFBC4F',
@@ -359,7 +382,7 @@ app.controller('AppCtrl', function ($scope, $timeout, Services, $mdSidenav, $log
     }
   }
   /**
-  * Build handler to open/close a SideNav; when animation finishes
+  * Build handler to open/close a SideNav when animation finishes
   * report completion in console
   */
   function buildDelayedToggler (navID) {
