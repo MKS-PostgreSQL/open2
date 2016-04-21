@@ -1,11 +1,11 @@
 var express = require('express')
 var router = express.Router()
-var db = require('../../db.js')
-var sendError = require('../helpers.js').sendError
-var sendSuccess = require('../helpers.js').sendSuccess
-var sendData = require('../helpers.js').sendData
-var postData = require('../helpers.js').postData
-var findUserId = require('../helpers.js').findUserId
+var db = require('./db.js')
+var sendError = require('./helpers.js').sendError
+var sendSuccess = require('./helpers.js').sendSuccess
+var sendData = require('./helpers.js').sendData
+var postData = require('./helpers.js').postData
+var findUserId = require('./helpers.js').findUserId
 
 //send a friend request to a user or accept a friend request
 router.post('/request', function (req, res) {

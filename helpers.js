@@ -1,4 +1,4 @@
-var db = require('../db.js')
+var db = require('./db.js')
 var dt = {}
 
 //find user id of a user
