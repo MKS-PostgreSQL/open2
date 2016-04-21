@@ -1,4 +1,8 @@
 var app = angular.module('myApp', ['ngMaterial', 'ngRoute', 'ngMessages', 'uiGmapgoogle-maps'])
+
+app.controller("ChatController", function($scope) {
+})
+
 app.config(function ($mdThemingProvider) {
   $mdThemingProvider.definePalette('Open2Pallete', {
     '50': 'FFBC4F',

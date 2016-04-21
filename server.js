@@ -1,12 +1,13 @@
-var express = require('express')
 var bodyParser = require('body-parser')
 var cors = require('cors')
 var dotenv = require('dotenv')
 var path = require('path')
 var morgan = require('morgan')
+var express = require('express')
+var app = require('express')()
+var http = require('http').Server(app)
+var io = require('socket.io')(http)
 dotenv.config()
-
-var app = express()
 
 app.use(cors())
 
@@ -26,4 +27,6 @@ app.use('/dashboard', dashboard)
 
 var port = process.env.PORT || 8080
 
-app.listen(port, console.log('Magic happens on 8080'))
+http.listen(port, console.log('Magic happens on 8080'))
+io.on('connection', function(socket) {
+})
