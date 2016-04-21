@@ -47,11 +47,19 @@ app.controller('loginCtrl', function ($scope, Services, $location) {
   $scope.submit = function () {
     var user = {
       username: $scope.username,
-      password: $scope.password
+      password: $scope.password,
+      longitude: $scope.userlongitude,
+      latitude: $scope.userlatitude
     }
 
     // remember the current username to use later
     window.localStorage.setItem('username', $scope.username)
+    window.navigator.geolocation.getCurrentPosition(function (data) {
+      $scope.userlongitude = data.coords.longitude
+      $scope.userlatitude = data.coords.latitude
+    })
+    window.localStorage.setItem('longitude', $scope.userlongitude)
+    window.localStorage.setItem('latitude', $scope.userlatitude)
 
     // login the user
     Services.login(user)
