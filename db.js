@@ -1,9 +1,11 @@
 var mysql = require('mysql')
 var fs = require('fs')
-var dotenv = require('dotenv')
 var path = require('path')
 
-dotenv.config()
+if (process.env.DEPLOYED === false) {
+  var dotenv = require('dotenv')
+  dotenv.config()
+}
 
 var db = mysql.createConnection({
   host: process.env.DB_HOST,
