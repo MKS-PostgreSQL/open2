@@ -28,5 +28,11 @@ app.use('/dashboard', dashboard)
 var port = process.env.PORT || 8080
 
 http.listen(port, console.log('Magic happens on 8080'))
+
+var messages = []
 io.on('connection', function(socket) {
+  socket.on('sendMessage', function (data) {
+    messages.push(data.message)
+    socket.emit('newMessage', {message: data.message})
+  })
 })
