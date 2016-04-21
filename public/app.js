@@ -198,11 +198,9 @@ app.filter('reverse', function () {
 
 // / factory for get/post requests
 app.factory('Services', function ($http, $location) {
-  var username
-
   // login
   var login = function (user) {
-    console.log('services username inside signup', username)
+    console.log('User is logged in')
     return $http({
       method: 'POST',
       url: 'http://localhost:8080/index/homepage',
@@ -219,10 +217,12 @@ app.factory('Services', function ($http, $location) {
 
   // logout
 
-  var logout = function () {
+  var logout = function (username) {
+    console.log('this is username in logout: ', username)
     return $http({
-      method: 'PUT',
-      url: 'http://localhost:8080/dashboard/logout'
+      method: 'POST',
+      url: 'http://localhost:8080/dashboard/logout',
+      data: username
     })
       .then(function (resp) {
         $location.path('/')
@@ -232,6 +232,7 @@ app.factory('Services', function ($http, $location) {
   // signup
 
   var signup = function (user) {
+    console.log('New user is signed up')
     return $http({
       method: 'POST',
       url: 'http://localhost:8080/signup/newuser',
@@ -317,7 +318,6 @@ app.factory('Services', function ($http, $location) {
     eventsPost: eventsPost,
     signup: signup,
     logout: logout,
-    username: username,
     uploadFriendslist: uploadFriendslist,
     joinEvent: joinEvent,
     unjoinEvent: unjoinEvent
@@ -331,7 +331,11 @@ app.controller('AppCtrl', function ($scope, $timeout, Services, $mdSidenav, $log
   $scope.toggleLeft = buildDelayedToggler('left')
   $scope.toggleRight = buildToggler('right')
   $scope.logout = function () {
-    Services.logout()
+    var user = window.localStorage.getItem('username')
+    var username = {
+      username: user
+    }
+    Services.logout(username)
   }
   $scope.isOpenRight = function () {
     return $mdSidenav('right').isOpen()
