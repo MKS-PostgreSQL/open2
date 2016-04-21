@@ -1,4 +1,4 @@
-var app = angular.module('myApp', ['ngMaterial', 'ngRoute', 'ngMessages', 'uiGmapgoogle-maps'])
+var app = angular.module('myApp', ['ngMaterial', 'ngRoute', 'ngMessages'])
 app.config(function ($mdThemingProvider) {
   $mdThemingProvider.definePalette('Open2Pallete', {
     '50': 'FFBC4F',
