@@ -1,10 +1,14 @@
 var express = require('express')
 var bodyParser = require('body-parser')
 var cors = require('cors')
-var dotenv = require('dotenv')
 var path = require('path')
 var morgan = require('morgan')
-dotenv.config()
+
+if (process.env.DEPLOYED !== true) {
+  console.log('Not On Heroku -> Using ENV File Instead')
+  var dotenv = require('dotenv')
+  dotenv.config()
+}
 
 var app = express()
 
