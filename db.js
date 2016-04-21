@@ -2,6 +2,7 @@ var mysql = require('mysql')
 var fs = require('fs')
 var path = require('path')
 
+console.log('Deployed:', process.env.DEPLOYED)
 if (process.env.DEPLOYED !== true) {
   console.log('Not On Heroku -> Using ENV File Instead')
   var dotenv = require('dotenv')

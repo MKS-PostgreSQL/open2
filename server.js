@@ -4,6 +4,7 @@ var cors = require('cors')
 var path = require('path')
 var morgan = require('morgan')
 
+console.log('Deployed:', process.env.DEPLOYED)
 if (process.env.DEPLOYED !== true) {
   console.log('Not On Heroku -> Using ENV File Instead')
   var dotenv = require('dotenv')

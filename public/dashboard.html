@@ -7,7 +7,8 @@
       <h1 style="font-size: 30px; font-weight: bold;" class = "open" ng-click="toggleLeft()"> Open2</h2>
       <span flex></span>
 
-      <md-button class="md-warn md-raised md-hue-2" ng-click="logout()">logout</md-button>
+      <md-button ng-controller="dashboardCtrl" class="md-primary md-raised md-hue-2" ng-click="showAdvanced($event)">new event</md-button>
+      <md-button class="md-warn md-raised" ng-click="logout()">logout</md-button>
      </div>
    </md-toolbar>
 </div>
@@ -28,7 +29,7 @@
   </md-card-title-text>
      </md-card-title>
     </md-card>
-  </div> 
+  </div>
 </ul>
 
   </md-content>
@@ -37,19 +38,6 @@
 
    <md-content flex layout-padding>
      <div layout="column" layout-fill layout-align="top center">
-
-<!-- button start -->
-<div ng-controller="dashboardCtrl" class="md-padding" id="popupContainer" ng-cloak>
-  <p class="inset dashQuestion"> Ask my friends if they are open 2? </p>
-
-  <div class="dialog-demo-content" layout="row" layout-wrap layout-margin layout-align="center">
-
-    <!-- event button -->
-    <md-button class="md-primary md-raised" ng-click="showAdvanced($event)" flex class="md-warn"> new event</md-button>
-
-  </div>
-
-</div>
 
      <!-- notification Box -->
 <div id = 'eventContainer' ng-controller="SubheaderAppCtrl" layout="column" flex layout-fill ng-cloak>
