@@ -30,4 +30,4 @@ app.use('/dashboard', dashboard)
 
 var port = process.env.PORT || 8080
 
-app.listen(port, console.log('Magic happens on 8080'))
+app.listen(port, console.log('Magic happens on', port))
