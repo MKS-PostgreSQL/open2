@@ -1,6 +1,5 @@
 var bodyParser = require('body-parser')
 var cors = require('cors')
-var dotenv = require('dotenv')
 var path = require('path')
 var morgan = require('morgan')
 var express = require('express')
@@ -8,6 +7,11 @@ var app = require('express')()
 var http = require('http').Server(app)
 var io = require('socket.io')(http)
 dotenv.config()
+
+if (!process.env.DEPLOYED) {
+  var dotenv = require('dotenv')
+  dotenv.config()
+}
 
 app.use(cors())
 

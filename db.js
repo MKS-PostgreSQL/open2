@@ -2,7 +2,7 @@ var mysql = require('mysql')
 var fs = require('fs')
 var path = require('path')
 
-if (process.env.DEPLOYED === false) {
+if (!process.env.DEPLOYED) {
   var dotenv = require('dotenv')
   dotenv.config()
 }

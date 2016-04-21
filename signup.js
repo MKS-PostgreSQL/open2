@@ -15,10 +15,11 @@ app.use(bodyParser.urlencoded({ extended: true }))
 router.post('/newuser', function (request, response) {
   var username = request.body.username
   var password = request.body.password
-  var location = request.body.location
+  var long = request.body.longitude
+  var lat = request.body.latitude
   var hashedPass = bcrypt.hashSync(password, 10)
 
-  var users = {username: username, password: hashedPass, location: location}
+  var users = {username: username, password: hashedPass, longitude: long, latitude: lat}
 
   db.query('INSERT INTO Users SET ?', users, function (err, results) {
     if (err) {

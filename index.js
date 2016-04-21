@@ -11,7 +11,8 @@ app.use(cors())
 router.post('/homepage', function (request, response) {
   var username = request.body.username
   var password = request.body.password
-  var location = request.body.location
+  var long = request.body.longitude
+  var lat = request.body.latitude
 
   db.query('SELECT * FROM Users WHERE `username` = ?;', [username], function (err, rows) {
     console.log('This is our password in our db', rows[0].password)
@@ -25,8 +26,8 @@ router.post('/homepage', function (request, response) {
         response.sendStatus(500)
         console.log('Incorrect password')
       } else {
-        db.query('UPDATE Users SET Users.location = ? WHERE Users.username = ?;',
-          [location, username],
+        db.query('UPDATE Users SET Users.longitude = ?, Users.latitude = ? WHERE Users.username = ?;',
+          [long, lat, username],
           function (err, rows) {
             if (err) {
               console.error(err)
