@@ -50,12 +50,11 @@
      <div layout="column" layout-fill layout-align="top center">
 
      <!-- google maps -->
-<!-- icon="img/{{m.status}}.png" -->
-      <ui-gmap-google-map center='center' zoom='8'>
+      <ui-gmap-google-map center='center' zoom='18'>
         <ui-gmap-marker ng-repeat="m in markers"
                         coords="m.coords"
                         idkey="m.id"
-                        >
+                        options="{icon: m.status}">
           <ui-gmap-window options="m.markerWindowOptions" closeclick="closeMarkerWindow(m.id)" show="true">
           <div>{{m.title}}</div>
           </ui-gmap-window>
