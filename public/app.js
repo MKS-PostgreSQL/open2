@@ -167,10 +167,11 @@ app.controller('dashboardCtrl', function ($scope, Services, $mdDialog, $mdMedia,
     }
   }
 
+  // 002
   Services.uploadFriendslist()
     .then(function (data) {
-      // console.log("friendslist I got from server ", data.data)
-      $scope.friends = data.data
+      var friendsArr = data.data.data
+      $scope.friends = friendsArr
     })
 
   // this is our pop up dialog box
@@ -309,13 +310,17 @@ app.factory('Services', function ($http, $location) {
       data: eventInfo
     })
   }
-
+  // 001
   // get freinds list --> needs to be fixed
   var uploadFriendslist = function () {
-    return $http({
-      method: 'GET',
-      url: '/dashboard/friends'
-    })
+    console.log(window.localStorage.getItem('username'))
+    var config = {
+      headers: {
+        username: window.localStorage.getItem('username')
+      }
+    }
+
+    return $http.get('/friends/all', config)
   }
 
   // add a record to database when user joins an event
