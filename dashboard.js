@@ -4,7 +4,7 @@ var twilio = require('twilio')('AC40691c0816f7dd360b043b23331f4f43', '89f0d01b69
 
 router.post('/location', function (request, response) {
   var username = request.body.username
-  var friends = 'SELECT u.longitude, u.latitude, u.username FROM Users u ' +
+  var friends = 'SELECT u.longitude, u.latitude, u.username, u.online AS status FROM Users u ' +
     'INNER JOIN Friends f1 ' +
     'ON f1.user_id = u.id ' +
     'INNER JOIN Friends f2 ' +
@@ -20,6 +20,14 @@ router.post('/location', function (request, response) {
             if (err) {
               console.error(err)
             } else {
+              rows.map(function (value) {
+                if (value.status === 0) {
+                  value.status = 'img/offline.png'
+                } else {
+                  value.status = 'img/online.png'
+                }
+                return value
+              })
               response.send(rows)
             }
           })
@@ -104,7 +112,6 @@ router.get('/friends', function (request, response) {
 router.post('/join', function (request, response) {
   var username = request.body.username
   var id = request.body.eventId
-
   db.query('SELECT id FROM Users WHERE `username` = ?;', [username], function (err, rows) {
     if (err) {
       throw err
