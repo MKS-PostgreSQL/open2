@@ -86,7 +86,7 @@
  <ul flex id = 'eventsIgoTo'>
  <h4 class = 'font'> Attending! </h4>
       <li ng-repeat="event in events.eventsIgoTo | reverse" style = "list-style: none">
-        <span style = "font-weight: bold" class = 'font' > I want to {{ event.eventname}} </span>
+        <span ng-controller="ChatController" ng-click= 'switchRooms(event)' style = "font-weight: bold" class = 'font' > I want to {{ event.eventname}} </span>
         <span> {{event.timestamp.slice(11, 19)}}  </span>
 
         <md-button   ng-click="join(event.id, event.status)" class="md-warn md-raised md-hue-2 font"> {{event.status}}</md-button>

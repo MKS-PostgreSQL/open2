@@ -1,11 +1,19 @@
 var app = angular.module('myApp', ['ngMaterial', 'ngRoute', 'ngMessages', 'uiGmapgoogle-maps'])
 
 app.controller('ChatController', function ($scope) {
+  $scope.switchRooms = function (event) {
+    window.localStorage.setItem('currentRoom', event.id)
+    console.log(event);
+    socket.emit('requestRoomChange', {roomID: event.id})
+  }
+
   $scope.messages = []
   var socket = io.connect('/')
 
   socket.on('refresh', function (data) {
     $scope.messages = data.messages
+    // console.log($scope.messages)
+    $scope.$apply()
   })
 
   socket.on('newMessage', function (data) {
@@ -16,7 +24,8 @@ app.controller('ChatController', function ($scope) {
   $scope.sendMessage = function () {
     socket.emit('sendMessage', {
       author: window.localStorage.getItem('username'),
-      text: $scope.newMessage
+      text: $scope.newMessage,
+      roomID: window.localStorage.getItem('currentRoom')
     })
     $scope.newMessage = ''
   }
@@ -98,6 +107,9 @@ app.controller('signupCtrl', function ($scope, Services) {
 app.controller('dashboardCtrl', function ($scope, Services, $mdDialog, $mdMedia, $route, $sce) {
   $scope.events = {}
   $scope.center = null
+  $scope.switchRooms = function(room) {
+    console.log(room)
+  }
   window.navigator.geolocation.getCurrentPosition(function (data) {
     $scope.center = {
       latitude: data.coords.latitude,
@@ -359,11 +371,11 @@ app.factory('Services', function ($http, $location) {
   }
 
   // add a record to database when user joins an event
-  var joinEvent = function (eventId) {
+  var joinEvent = function (blob) {
     return $http({
       method: 'POST',
       url: '/dashboard/join',
-      data: eventId
+      data: {eventId: blob.eventId, username: blob.user}
     })
   }
 

@@ -55,6 +55,25 @@ io.on('connection', function (socket) {
     socket.emit('refresh', {messages})
   })
 
+  socket.on('requestRoomChange', function (data) {
+    messages = []
+    db.query('SELECT Messages.message, Users.username FROM Messages LEFT JOIN Users ON Messages.author_id=Users.id WHERE event_id =?', [data.roomID], function (err, rows) {
+      if (err) {
+        console.log(err)
+      } else {
+        rows.forEach(function (value) {
+          messages.push({
+            author: value.username,
+            text: value.message
+          })
+        })
+      }
+      socket.emit('refresh', {messages})
+      console.log(rows)
+      console.log(messages)
+    })
+  })
+
   socket.on('sendMessage', function (data) {
     messages.push({author: data.author, text: data.text})
 
@@ -63,7 +82,8 @@ io.on('connection', function (socket) {
         console.log(err)
       } else {
         console.log(rows[0])
-        db.query('INSERT INTO Messages (event_id, author_id, message) VALUES (1, ?, ?)', [rows[0].id, data.text], function (err, rows) {
+        console.log(data.roomID)
+        db.query('INSERT INTO Messages (event_id, author_id, message) VALUES (?, ?, ?)', [data.roomID, rows[0].id, data.text], function (err, rows) {
           if (err) {
             console.log(err)
           } else {
