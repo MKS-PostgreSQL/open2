@@ -34,7 +34,7 @@
         <img src="http://portal.stickntrack.com/images/profile.jpg" alt="Mountain View" style="width: 50px; height:50px"><span class="md-headline font">{{friend.username}}</span>
       </md-card-title-text>
     </div>
-    
+
     <!-- Search Box -->
     <md-input-container class="md-block">
       <label>Search</label>
@@ -55,7 +55,7 @@
             <li ng-repeat="event in events.list | reverse" style="list-style: none">
               <span style="font-weight: bold" class="font" > {{event.username}} wants to {{ event.eventname}} </span>
               <span> {{event.timestamp.slice(11, 19)}}</span>
-              <md-button ng-click="join(event.id, event.status)" class="md-warn md-raised md-hue-2" class="font"> {{event.status}} </md-button>
+              <md-button data-ng-click-once="join(event.id, event.status)" class="md-warn md-raised md-hue-2" class="font"> {{event.status}} </md-button>
             </li>
           </ul>
 
