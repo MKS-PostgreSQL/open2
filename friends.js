@@ -4,6 +4,7 @@ var db = require('./db.js')
 var sendData = require('./helpers.js').sendData
 var postData = require('./helpers.js').postData
 var findUserId = require('./helpers.js').findUserId
+var sendError = require('./helpers.js').sendError
 
 // send a friend request to a user or accept a friend request
 router.post('/request', function (req, res) {
@@ -58,6 +59,31 @@ router.get('/all', function (req, res) {
     'ON f2.user_id = f1.friend_id AND f2.friend_id = f1.user_id ' +
     'WHERE f2.user_id =?;'
     db.query(select, [usernameId], sendData(res))
+  })
+})
+
+// delete a friend
+router.post('/delete', function (req, res) {
+  var username = req.headers.username
+  var friend = req.body.friend
+  var usernameId
+  var friendId
+  var deleteFriend = 'DELETE FROM Friends WHERE Friends.user_id = ? AND Friends.friend_id = ?;'
+  findUserId(username).then(function (id) {
+    usernameId = id
+  }).then(function () {
+    findUserId(friend).then(function (id) {
+      friendId = id
+    }).then(function () {
+      db.query(deleteFriend, [usernameId, friendId], function (err, rows) {
+        if (err) {
+          console.error(err)
+          sendError(res, 500)
+        } else {
+          db.query(deleteFriend, [friendId, usernameId], postData(res))
+        }
+      })
+    })
   })
 })
 

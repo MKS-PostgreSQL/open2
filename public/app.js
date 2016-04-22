@@ -2,7 +2,7 @@ var app = angular.module('myApp', ['ngMaterial', 'ngRoute', 'ngMessages', 'uiGma
 
 app.controller('ChatController', function ($scope) {
   $scope.messages = []
-  var socket = io.connect('localhost:8080')
+  var socket = io.connect('/')
 
   socket.on('refresh', function (data) {
     $scope.messages = data.messages
@@ -63,11 +63,10 @@ app.config(function ($routeProvider) {
 
 // / login controller
 app.controller('loginCtrl', function ($scope, Services, $location) {
-  $scope.redirectSignup = function () {
-    $location.path('/signup')
-  }
+  $scope.redirectSignup = redirectSignup
+  $scope.submit = submit
 
-  $scope.submit = function () {
+  function submit () {
     window.navigator.geolocation.getCurrentPosition(function (data) {
       $scope.userlongitude = data.coords.longitude
       $scope.userlatitude = data.coords.latitude
@@ -81,11 +80,17 @@ app.controller('loginCtrl', function ($scope, Services, $location) {
       Services.login(user)
     })
   }
+
+  function redirectSignup () {
+    $location.path('/signup')
+  }
 })
 
 // signup controller
 app.controller('signupCtrl', function ($scope, Services) {
-  $scope.submit = function () {
+  $scope.submit = submit
+
+  function submit () {
     var user = {
       username: $scope.username,
       password: $scope.password
@@ -109,6 +114,7 @@ app.controller('dashboardCtrl', function ($scope, Services, $mdDialog, $mdMedia,
   var username = {
     username: user
   }
+
   Services.getLocation(username).then(function (data) {
     var markers = function (locations) {
       var location = []
@@ -129,7 +135,7 @@ app.controller('dashboardCtrl', function ($scope, Services, $mdDialog, $mdMedia,
     $scope.markers = markers(data.data)
   })
 
-  // // start uploading dashboard
+  // start uploading dashboard
   Services.uploadDashboard()
     .then(function (data) {
       $scope.events.fetch = true
@@ -177,14 +183,10 @@ app.controller('dashboardCtrl', function ($scope, Services, $mdDialog, $mdMedia,
 
       $scope.events.list = eventsToJoin
       $scope.events.eventsIgoTo = myEvents
-    }) // end of .then
-
-  // //////////////end of uploading dashboard
+    })
 
   // join or unjoin event
-
   $scope.join = function (id, status) {
-    // join
     if (status === 'join') {
       var joinInfo = {
         'eventId': id,
@@ -198,7 +200,6 @@ app.controller('dashboardCtrl', function ($scope, Services, $mdDialog, $mdMedia,
     }
   }
 
-  // 002
   Services.uploadFriendslist()
     .then(function (data) {
       var friendsArr = data.data.data
@@ -206,7 +207,6 @@ app.controller('dashboardCtrl', function ($scope, Services, $mdDialog, $mdMedia,
     })
 
   // this is our pop up dialog box
-
   $scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm')
   $scope.showAdvanced = function (ev) {
     var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen
@@ -225,7 +225,6 @@ app.controller('dashboardCtrl', function ($scope, Services, $mdDialog, $mdMedia,
       $scope.customFullscreen = (wantsFullScreen === true)
     })
   }
-  // this the end of our pop up dialog box.
 
   $scope.time = {
     value: new Date(2016, 3, 9) // fix timestamp
@@ -240,22 +239,20 @@ app.controller('dashboardCtrl', function ($scope, Services, $mdDialog, $mdMedia,
 
     Services.eventsPost(eventInfo)
       .then(function (respData) {
-        // console.log('I got this back from server/database', respData)
-        $route.reload() //
+        $route.reload()
       })
   }
-}) // /////// end of dahboard controller
+})
 
-// / this reversed the order of the events displayed on dashboard
+// this reversed the order of the events displayed on dashboard
 app.filter('reverse', function () {
   return function (items) {
     return items.slice().reverse()
   }
 })
 
-// / factory for get/post requests
+// factory for get/post requests
 app.factory('Services', function ($http, $location) {
-  // login
   var login = function (user) {
     return $http({
       method: 'POST',
@@ -279,8 +276,6 @@ app.factory('Services', function ($http, $location) {
     })
   }
 
-  // logout
-
   var logout = function (username) {
     return $http({
       method: 'POST',
@@ -291,8 +286,6 @@ app.factory('Services', function ($http, $location) {
         $location.path('/')
       })
   }
-
-  // signup
 
   var signup = function (user) {
     return $http({
@@ -321,7 +314,7 @@ app.factory('Services', function ($http, $location) {
       })
   }
 
-  // // Twillio notification
+  // Twillio notification
   var notify = function (sendText) {
     return $http({
       method: 'POST',
@@ -337,17 +330,14 @@ app.factory('Services', function ($http, $location) {
       })
   }
 
-  // new event request
   var eventsPost = function (eventInfo) {
-    // console.log('eventinfo inside events post', eventInfo)
     return $http({
       method: 'POST',
       url: '/dashboard/events',
       data: eventInfo
     })
   }
-  // 001
-  // get freinds list --> needs to be fixed
+
   var uploadFriendslist = function () {
     var config = {
       headers: {
@@ -359,11 +349,11 @@ app.factory('Services', function ($http, $location) {
   }
 
   // add a record to database when user joins an event
-  var joinEvent = function (eventId) {
+  var joinEvent = function (blob) {
     return $http({
       method: 'POST',
       url: '/dashboard/join',
-      data: eventId
+      data: {eventId: blob.eventId, username: blob.user}
     })
   }
 
@@ -389,9 +379,6 @@ app.factory('Services', function ($http, $location) {
     unjoinEvent: unjoinEvent
   }
 })
-// / end of Services
-
-// /// controller handles styling
 
 app.controller('AppCtrl', function ($scope, $timeout, Services, $mdSidenav, $log) {
   $scope.toggleLeft = buildDelayedToggler('left')
@@ -447,6 +434,7 @@ app.controller('AppCtrl', function ($scope, $timeout, Services, $mdSidenav, $log
 })
   .controller('LeftCtrl', function ($scope, $timeout, $mdSidenav, $log) {
     $scope.close = function () {
+      console.log('closing!')
       $mdSidenav('left').close()
         .then(function () {
           $log.debug('close LEFT is done')
