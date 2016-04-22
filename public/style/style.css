@@ -221,13 +221,23 @@ float: right;
 .dialogdemoBasicUsage button {
   width: 200px; }
 .dialogdemoBasicUsage div#status {
-  color: #c60008; }
+  color: #c60008;
+}
 
-  .datepickerdemoBasicUsage {
-  /** Demo styles for mdCalendar. */ }
-  .datepickerdemoBasicUsage md-content {
-    padding-bottom: 200px; }
-  .datepickerdemoBasicUsage .validation-messages {
-    font-size: 12px;
-    color: #dd2c00;
-    margin: 10px 0 0 25px; }
+.datepickerdemoBasicUsage {
+  /** Demo styles for mdCalendar. */
+}
+.datepickerdemoBasicUsage md-content {
+  padding-bottom: 200px;
+}
+.datepickerdemoBasicUsage .validation-messages {
+  font-size: 12px;
+  color: #dd2c00;
+  margin: 10px 0 0 25px;
+}
+
+.md-sidenav-left {
+   width: 250px;
+   min-width: 250px;
+   max-width: 250px;
+ }
