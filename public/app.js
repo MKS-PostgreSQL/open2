@@ -99,6 +99,20 @@ app.controller('signupCtrl', function ($scope, Services) {
   }
 })
 
+app.directive('ngClickOnce', function () {
+  return {
+    restrict: 'A',
+    link: function (scope, element, attribute) {
+      var clickFunction = function () {
+        scope.$eval(attribute.ngClickOnce)
+        scope.$apply()
+        element.unbind('click', clickFunction)
+      }
+      element.bind('click', clickFunction)
+    }
+  }
+})
+
 // dashboard controller
 app.controller('dashboardCtrl', function ($scope, Services, $mdDialog, $mdMedia, $route, $sce) {
   $scope.events = {}
@@ -187,16 +201,20 @@ app.controller('dashboardCtrl', function ($scope, Services, $mdDialog, $mdMedia,
 
   // join or unjoin event
   $scope.join = function (id, status) {
+    // join
     if (status === 'join') {
       var joinInfo = {
         'eventId': id,
         'user': window.localStorage.getItem('username')
       }
       Services.joinEvent(joinInfo)
-      $route.reload()
+      // $route.reload()
     } else if (status === 'unjoin') {
-      // delete the record about user's attendance from database
-      Services.unjoinEvent(id) // this doesn't work for some reason.
+      var unjoinInfo = {
+        'eventId': id,
+        'user': window.localStorage.getItem('username')
+      }
+      Services.unjoinEvent(unjoinInfo)
     }
   }
 
@@ -348,8 +366,8 @@ app.factory('Services', function ($http, $location) {
     return $http.get('/friends/all', config)
   }
 
-  // add a record to database when user joins an event
   var joinEvent = function (blob) {
+    console.log('join event function runs')
     return $http({
       method: 'POST',
       url: '/dashboard/join',
@@ -357,12 +375,12 @@ app.factory('Services', function ($http, $location) {
     })
   }
 
-  // remove the record of user from database// this isn't handled in the backend
-  var unjoinEvent = function (userEventId) {
+  var unjoinEvent = function (unjoinInfo) {
+    console.log('unjoin event function runs')
     return $http({
       method: 'POST',
       url: '/dashboard/unjoin',
-      data: userEventId
+      data: {eventId: unjoinInfo.eventId, username: unjoinInfo.user}
     })
   }
 
