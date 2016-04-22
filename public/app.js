@@ -119,6 +119,7 @@ app.controller('dashboardCtrl', function ($scope, Services, $mdDialog, $mdMedia,
             longitude: locations[i].longitude,
             latitude: locations[i].latitude
           },
+          status: locations[i].status,
           title: locations[i].username
         }
         location.push(newMarker)
