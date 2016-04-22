@@ -1,4 +1,27 @@
 var app = angular.module('myApp', ['ngMaterial', 'ngRoute', 'ngMessages', 'uiGmapgoogle-maps'])
+
+app.controller('ChatController', function ($scope) {
+  $scope.messages = []
+  var socket = io.connect('localhost:8080')
+
+  socket.on('refresh', function (data) {
+    $scope.messages = data.messages
+  })
+
+  socket.on('newMessage', function (data) {
+    $scope.messages.push(data)
+    $scope.$apply()
+  })
+
+  $scope.sendMessage = function () {
+    socket.emit('sendMessage', {
+      author: window.localStorage.getItem('username'),
+      text: $scope.newMessage
+    })
+    $scope.newMessage = ''
+  }
+})
+
 app.config(function ($mdThemingProvider) {
   $mdThemingProvider.definePalette('Open2Pallete', {
     '50': 'FFBC4F',
@@ -179,10 +202,11 @@ app.controller('dashboardCtrl', function ($scope, Services, $mdDialog, $mdMedia,
     }
   }
 
+  // 002
   Services.uploadFriendslist()
     .then(function (data) {
-      // console.log("friendslist I got from server ", data.data)
-      $scope.friends = data.data
+      var friendsArr = data.data.data
+      $scope.friends = friendsArr
     })
 
   // this is our pop up dialog box
@@ -330,13 +354,17 @@ app.factory('Services', function ($http, $location) {
       data: eventInfo
     })
   }
-
+  // 001
   // get freinds list --> needs to be fixed
   var uploadFriendslist = function () {
-    return $http({
-      method: 'GET',
-      url: '/dashboard/friends'
-    })
+    console.log(window.localStorage.getItem('username'))
+    var config = {
+      headers: {
+        username: window.localStorage.getItem('username')
+      }
+    }
+
+    return $http.get('/friends/all', config)
   }
 
   // add a record to database when user joins an event
@@ -404,7 +432,7 @@ app.controller('AppCtrl', function ($scope, $timeout, Services, $mdSidenav, $log
     }
   }
   /**
-  * Build handler to open/close a SideNav; when animation finishes
+  * Build handler to open/close a SideNav when animation finishes
   * report completion in console
   */
   function buildDelayedToggler (navID) {
