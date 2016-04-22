@@ -20,7 +20,6 @@ db.connect(function (err) {
     console.log('Database is connected')
   } else {
     console.log(err)
-    console.log('Error connecting to database')
   }
 })
 

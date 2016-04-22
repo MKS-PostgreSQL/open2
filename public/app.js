@@ -99,7 +99,6 @@ app.controller('dashboardCtrl', function ($scope, Services, $mdDialog, $mdMedia,
   $scope.events = {}
   $scope.center = null
   window.navigator.geolocation.getCurrentPosition(function (data) {
-    console.log('this is data: ', data)
     $scope.center = {
       latitude: data.coords.latitude,
       longitude: data.coords.longitude
@@ -111,27 +110,23 @@ app.controller('dashboardCtrl', function ($scope, Services, $mdDialog, $mdMedia,
     username: user
   }
   Services.getLocation(username).then(function (data) {
-    console.log('this is friends locations: ', data.data)
-    markers(data.data)
-  })
-  $scope.markers = markers
-  // set a variable that holds array of locations ['coordinates']
-  // store location when logged in --> store as {location : " "}
-
-  var markers = function (locations) {
-    var location = []
-    // loop through the array of locations
-    for (var i = 0; i < locations.length; i++) {
-      var newMarker = {
-        id: parseInt(i),
-        latitude: location[i].latitude,
-        longitude: location[i].longitude,
-        title: 'Homie ' + i + "'s Location"
+    var markers = function (locations) {
+      var location = []
+      for (var i = 0; i < locations.length; i++) {
+        var newMarker = {
+          id: parseInt(i),
+          coords: {
+            longitude: locations[i].longitude,
+            latitude: locations[i].latitude
+          },
+          title: locations[i].username
+        }
+        location.push(newMarker)
       }
-      location.push(newMarker)
+      return location
     }
-    return location
-  }
+    $scope.markers = markers(data.data)
+  })
 
   // // start uploading dashboard
   Services.uploadDashboard()
@@ -261,7 +256,6 @@ app.filter('reverse', function () {
 app.factory('Services', function ($http, $location) {
   // login
   var login = function (user) {
-    console.log('User is logged in')
     return $http({
       method: 'POST',
       url: '/index/homepage',
@@ -277,7 +271,6 @@ app.factory('Services', function ($http, $location) {
   }
 
   var getLocation = function (user) {
-    console.log('this is user for getLocation: ', user)
     return $http({
       method: 'POST',
       url: '/dashboard/location',
@@ -288,7 +281,6 @@ app.factory('Services', function ($http, $location) {
   // logout
 
   var logout = function (username) {
-    console.log('this is username in logout: ', username)
     return $http({
       method: 'POST',
       url: '/dashboard/logout',
@@ -302,7 +294,6 @@ app.factory('Services', function ($http, $location) {
   // signup
 
   var signup = function (user) {
-    console.log('New user is signed up')
     return $http({
       method: 'POST',
       url: '/signup/newuser',
@@ -357,7 +348,6 @@ app.factory('Services', function ($http, $location) {
   // 001
   // get freinds list --> needs to be fixed
   var uploadFriendslist = function () {
-    console.log(window.localStorage.getItem('username'))
     var config = {
       headers: {
         username: window.localStorage.getItem('username')
