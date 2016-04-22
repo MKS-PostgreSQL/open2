@@ -359,11 +359,11 @@ app.factory('Services', function ($http, $location) {
   }
 
   // add a record to database when user joins an event
-  var joinEvent = function (eventId) {
+  var joinEvent = function (blob) {
     return $http({
       method: 'POST',
       url: '/dashboard/join',
-      data: eventId
+      data: {eventId: blob.eventId, username: blob.user}
     })
   }
 
