@@ -147,10 +147,8 @@ router.post('/logout', function (request, response) {
 router.post('/unjoin', function (request, response) {
   var username = request.body.username
   var eId = request.body.eventId
-  console.log('INSIDE unjoin: ', username, eId)
   var unjoin = 'DELETE FROM Attendance WHERE Attendance.user_id = ? AND Attendance.event_id = ?;'
   findUserId(username).then(function (uid) {
-    console.log('INSIDE PROMISE')
     db.query(unjoin, [uid, eId], postData(response))
   })
 })
