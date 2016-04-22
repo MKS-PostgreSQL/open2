@@ -1,6 +1,8 @@
 var router = require('express').Router()
 var db = require('./db.js')
 var twilio = require('twilio')('AC40691c0816f7dd360b043b23331f4f43', '89f0d01b69bb6bcc473724b5b232b6f4')
+var postData = require('./helpers.js').postData
+var findUserId = require('./helpers.js').findUserId
 
 router.post('/location', function (request, response) {
   var username = request.body.username
@@ -140,6 +142,15 @@ router.post('/logout', function (request, response) {
         response.sendStatus(201)
       }
     })
+})
+
+router.post('/unjoin', function (request, response) {
+  var username = request.body.username
+  var eId = request.body.eventId
+  var unjoin = 'DELETE FROM Attendance WHERE Attendance.user_id = ? AND Attendance.event_id = ?;'
+  findUserId(username).then(function (uid) {
+    db.query(unjoin, [uid, eId], postData(response))
+  })
 })
 
 module.exports = router
