@@ -4,7 +4,7 @@ var twilio = require('twilio')('AC40691c0816f7dd360b043b23331f4f43', '89f0d01b69
 
 router.post('/location', function (request, response) {
   var username = request.body.username
-  var friends = 'SELECT u.longitude, u.latitude FROM Users u ' +
+  var friends = 'SELECT u.longitude, u.latitude, u.username FROM Users u ' +
     'INNER JOIN Friends f1 ' +
     'ON f1.user_id = u.id ' +
     'INNER JOIN Friends f2 ' +
