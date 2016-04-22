@@ -2,7 +2,7 @@ var app = angular.module('myApp', ['ngMaterial', 'ngRoute', 'ngMessages', 'uiGma
 
 app.controller('ChatController', function ($scope) {
   $scope.messages = []
-  var socket = io.connect('localhost:8080')
+  var socket = io.connect('/')
 
   socket.on('refresh', function (data) {
     $scope.messages = data.messages
@@ -349,11 +349,11 @@ app.factory('Services', function ($http, $location) {
   }
 
   // add a record to database when user joins an event
-  var joinEvent = function (eventId) {
+  var joinEvent = function (blob) {
     return $http({
       method: 'POST',
       url: '/dashboard/join',
-      data: eventId
+      data: {eventId: blob.eventId, username: blob.user}
     })
   }
 
