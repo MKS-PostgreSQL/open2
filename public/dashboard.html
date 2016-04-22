@@ -7,7 +7,7 @@
       <h1 style="font-size: 30px; font-weight: bold;" class = "open" ng-click="toggleLeft()"> Open2</h2>
       <span flex></span>
 
-      <md-button ng-controller="dashboardCtrl" class="md-primary md-raised md-hue-2" ng-click="showAdvanced($event)">new event</md-button>
+      <md-button class="md-primary md-raised md-hue-2" ng-click="showAdvanced($event)">new event</md-button>
       <md-button class="md-warn md-raised" ng-click="logout()">logout</md-button>
      </div>
    </md-toolbar>
@@ -15,13 +15,12 @@
 <!-- nav bar end -->
 
 <!-- friends list -->
-<section layout="row" flex>
+<section layout="row" flex ng-controller="dashboardCtrl">
   <md-sidenav class="md-sidenav-left" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')" md-disable-backdrop md-whiteframe="4">
   <md-toolbar class="md-theme-indigo" ng-controller="LeftCtrl">
      <h3 class= "open" ng-click="close()" >my friends</h3>
   </md-toolbar>
   <md-content layout-padding ng-controller="LeftCtrl">
-    <ul ng-controller = 'dashboardCtrl' >
     <div ng-repeat = 'friend in friends'>
   </md-card-title-media>
   <md-card-title-text>
@@ -30,7 +29,6 @@
      </md-card-title>
     </md-card>
   </div>
-</ul>
 
   </md-content>
    </md-sidenav>
@@ -51,6 +49,21 @@
 
      <div layout="column" layout-fill layout-align="top center">
 
+     <!-- google maps -->
+
+      <ui-gmap-google-map center='center' zoom='6'>
+        <ui-gmap-marker ng-repeat="m in markers"
+                        coords="m.coordinates"
+                        options="m.markerOptions"
+                        idkey="m.id">
+<!--           <ui-gmap-window options="m.markerWindowOptions" closeclick="closeMarkerWindow(m.id)" show="true">
+          <div>{{m.description}}</div>
+          </ui-gmap-window> -->
+        </ui-gmap-markers>
+      </ui-gmap-google-map>
+
+
+
      <!-- notification Box -->
 <div id = 'eventContainer' ng-controller="SubheaderAppCtrl" layout="column" flex layout-fill ng-cloak>
   <md-toolbar>
@@ -58,7 +71,6 @@
   </md-toolbar>
   <md-content md-theme="altTheme">
 
-  <div ng-controller='dashboardCtrl'>
   <div ng-if='events.fetch'>
 
     <ul flex id = 'eventsList' class = 'font'>
@@ -84,14 +96,13 @@
 </ul>
 
   </div>
-  </div>
   </md-content>
 </div>
 <!-- Notification END -->
 
-     </div>
+       </div>
 
-   </md-content>
+     </md-content>
 
  </section>
  </div>

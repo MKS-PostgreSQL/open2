@@ -192,6 +192,13 @@ float: right;
   }
 }
 
+.angular-google-map-container {
+    width: 450px;
+    height: 400px;
+    display: inline-block;
+
+  }
+
 .friendsNames{
   color: #ffa500;
   font-size: 30px;
