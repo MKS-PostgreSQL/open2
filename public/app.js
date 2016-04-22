@@ -2,7 +2,7 @@ var app = angular.module('myApp', ['ngMaterial', 'ngRoute', 'ngMessages', 'uiGma
 
 app.controller('ChatController', function ($scope) {
   $scope.messages = []
-  var socket = io.connect('localhost:8080')
+  var socket = io.connect('/')
 
   socket.on('refresh', function (data) {
     $scope.messages = data.messages
