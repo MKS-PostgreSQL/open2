@@ -74,6 +74,41 @@ app.controller('signupCtrl', function ($scope, Services) {
 // dashboard controller
 app.controller('dashboardCtrl', function ($scope, Services, $mdDialog, $mdMedia, $route, $sce) {
   $scope.events = {}
+  $scope.center = null
+  window.navigator.geolocation.getCurrentPosition(function (data) {
+    console.log('this is data: ', data)
+    $scope.center = {
+      latitude: data.coords.latitude,
+      longitude: data.coords.longitude
+    }
+    $scope.$apply()
+  })
+  var user = window.localStorage.getItem('username')
+  var username = {
+    username: user
+  }
+  Services.getLocation(username).then(function (data) {
+    console.log('this is friends locations: ', data.data)
+    markers(data.data)
+  })
+  $scope.markers = markers
+  // set a variable that holds array of locations ['coordinates']
+  // store location when logged in --> store as {location : " "}
+
+  var markers = function (locations) {
+    var location = []
+    // loop through the array of locations
+    for (var i = 0; i < locations.length; i++) {
+      var newMarker = {
+        id: parseInt(i),
+        latitude: location[i].latitude,
+        longitude: location[i].longitude,
+        title: 'Homie ' + i + "'s Location"
+      }
+      location.push(newMarker)
+    }
+    return location
+  }
 
   // // start uploading dashboard
   Services.uploadDashboard()
@@ -217,6 +252,15 @@ app.factory('Services', function ($http, $location) {
       })
   }
 
+  var getLocation = function (user) {
+    console.log('this is user for getLocation: ', user)
+    return $http({
+      method: 'POST',
+      url: '/dashboard/location',
+      data: user
+    })
+  }
+
   // logout
 
   var logout = function (username) {
@@ -315,6 +359,7 @@ app.factory('Services', function ($http, $location) {
 
   return {
     login: login,
+    getLocation: getLocation,
     uploadDashboard: uploadDashboard,
     notify: notify,
     eventsPost: eventsPost,

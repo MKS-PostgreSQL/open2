@@ -1,17 +1,33 @@
-var express = require('express')
+var router = require('express').Router()
 var db = require('./db.js')
-var cors = require('cors')
-var bodyParser = require('body-parser')
 var twilio = require('twilio')('AC40691c0816f7dd360b043b23331f4f43', '89f0d01b69bb6bcc473724b5b232b6f4')
-var router = express.Router()
 
-var app = express()
-app.use(cors())
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+router.post('/location', function (request, response) {
+  var username = request.body.username
+  var friends = 'SELECT u.longitude, u.latitude FROM Users u ' +
+    'INNER JOIN Friends f1 ' +
+    'ON f1.user_id = u.id ' +
+    'INNER JOIN Friends f2 ' +
+    'ON f2.user_id = f1.friend_id AND f2.friend_id = f1.user_id ' +
+    'WHERE f2.user_id =?;'
+  db.query('SELECT `id` FROM Users WHERE `username` = ?;',
+    [username], function (err, row) {
+      if (err) {
+        console.error(err)
+      } else {
+        db.query(friends, [row[0].id],
+          function (err, rows) {
+            if (err) {
+              console.error(err)
+            } else {
+              response.send(rows)
+            }
+          })
+      }
+    })
+})
 
 router.post('/events', function (request, response) {
-  console.log('inside dashboard username', request.body.username)
   var event = request.body.event
   var timestamp = request.body.time
   var username = request.body.username
@@ -55,12 +71,11 @@ router.post('/events', function (request, response) {
 
 var addUserEvents = function (creator, eventId, status) {
   var userEvents = {user_id: creator, event_id: eventId, created_by: status}
-  console.log(userEvents)
   db.query('INSERT INTO Attendance SET ?', userEvents, function (err, results) {
     if (err) {
       console.log(err)
     } else {
-      console.log('Add User Events', results)
+      console.log('Add User Events')
     }
   })
 }
@@ -70,7 +85,6 @@ router.get('/upload', function (request, response) {
     if (err) {
       throw err
     } else {
-      console.log('query from database', rows)
       response.send(rows)
     }
   })
@@ -82,7 +96,6 @@ router.get('/friends', function (request, response) {
     if (err) {
       throw err
     } else {
-      console.log('friends list from db', results)
       response.send(results)
     }
   })
@@ -96,14 +109,12 @@ router.post('/join', function (request, response) {
     if (err) {
       throw err
     } else {
-      console.log('INSIDE JOIN POST', rows[0].id)
       var userId = rows[0].id
 
       db.query('SELECT event_id FROM Attendance WHERE `id` = ?;', [id], function (err, rows) {
         if (err) {
           throw err
         } else {
-          console.log('User successfully joins through eventId: ', rows[0].event_id)
           var eventId = rows[0].event_id
           addUserEvents(userId, eventId, 0)
         }
