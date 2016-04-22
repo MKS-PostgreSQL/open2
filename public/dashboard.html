@@ -1,110 +1,109 @@
-<!--- nav bar start -->
-<div class = "bodyColor2">
-<div ng-controller="AppCtrl" layout="column" style="height:70px;" ng-cloak>
+<!-- Navigation Bar Container -->
+<div class="bodyColor2" ng-controller="AppCtrl" layout="column" style="height:70px" ng-cloak>
   <md-toolbar>
     <div class="md-toolbar-tools">
 
-      <h1 style="font-size: 30px; font-weight: bold;" class = "open" ng-click="toggleLeft()"> Open2</h2>
+      <!-- Open2 Header -->
+      <h1 style="font-size: 30px; font-weight: bold" class="open" ng-click="toggleLeft()">Open2</h2>
+
+      <!-- Spacing -->
       <span flex></span>
 
-      <md-button ng-controller="dashboardCtrl" class="md-primary md-raised md-hue-2" ng-click="showAdvanced($event)">new event</md-button>
-      <md-button class="md-warn md-raised" ng-click="logout()">logout</md-button>
-     </div>
-   </md-toolbar>
-</div>
-<!-- nav bar end -->
+      <!-- New Event Button -->
+      <md-button ng-controller="dashboardCtrl" class="md-primary md-raised md-hue-2" ng-click="showAdvanced($event)">New Event</md-button>
 
-<!-- friends list -->
+      <!-- Logout Button -->
+      <md-button class="md-warn md-raised" ng-click="logout()">Logout</md-button>
+    </div>
+  </md-toolbar>
+</div>
+
+<!-- Friends Container -->
 <section layout="row" flex ng-controller="dashboardCtrl">
   <md-sidenav class="md-sidenav-left" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')" md-disable-backdrop md-whiteframe="4">
+
+    <!-- Friends Header -->
     <md-toolbar class="md-theme-indigo" ng-controller="LeftCtrl">
-      <h3 class= "open" ng-click="close()" >my friends</h3>
+      <h3 class="open" ng-click="close()">Friends</h3>
     </md-toolbar>
     <md-content layout-padding ng-controller="LeftCtrl">
-      <ul ng-controller = 'dashboardCtrl' >
-        <div ng-repeat = 'friend in friends'>
-          <md-card-title-text>
-            <img src="http://portal.stickntrack.com/images/profile.jpg" alt="Mountain View" style="width:50px;height:50px;">
-            <span class="md-headline font">{{friend.username}}</span>
-          </md-card-title-text>
-        </div>
-      </ul>
-    </md-content>
+
+    <!-- List of Friends -->
+    <div ng-repeat="friend in friends">
+      <md-card-title-text>
+        <img src="http://portal.stickntrack.com/images/profile.jpg" alt="Mountain View" style="width: 50px; height:50px"><span class="md-headline font">{{friend.username}}</span>
+      </md-card-title-text>
+    </div>
     <md-input-container class="md-block">
       <label>Search</label>
       <input type="text" ng-model="search" />
     </md-input-container>
   </md-sidenav>
 
-   <md-content flex layout-padding>
+  <!-- Events Container -->
+  <md-content flex layout-padding>
+    <div layout="column" layout-fill layout-align="top center">
+    <div id="eventContainer" ng-controller="SubheaderAppCtrl" layout="column" flex layout-fill ng-cloak>
+      <md-content md-theme="altTheme">
 
-     <!-- chatroom -->
+        <!-- New Events List -->
+        <div ng-if="events.fetch">
+          <ul flex id="eventsList" class="font">
+            <h4 class="font">New</h4>
+            <li ng-repeat="event in events.list | reverse" style="list-style: none">
+              <span style="font-weight: bold" class="font" > {{event.username}} wants to {{ event.eventname}} </span>
+              <span> {{event.timestamp.slice(11, 19)}}</span>
+              <md-button ng-click="join(event.id, event.status)" class="md-warn md-raised md-hue-2" class="font"> {{event.status}} </md-button>
+            </li>
+          </ul>
 
-     <div class="chatroom" ng-controller="ChatController">
-       <ul>
-         <li ng-repeat="message in messages track by $index"> {{ message.author }}: {{ message.text }} </li>
-       </ul>
-       <form>
-         <input ng-model="newMessage" type="text" placeholder="Enter a message">
-         <button ng-click="sendMessage()">Send</button>
-       </form>
-     </div>
+          <!-- Attending List -->
+          <ul flex id="eventsIgoTo">
+            <h4 class="font">Accepted</h4>
+            <li ng-repeat="event in events.eventsIgoTo | reverse" style="list-style: none">
+              <span style="font-weight: bold" class="font" >I want to {{event.eventname}}</span>
+              <span{{event.timestamp.slice(11, 19)}}</span>
+              <md-button ng-click="join(event.id, event.status)" class="md-warn md-raised md-hue-2 font">{{event.status}}</md-button>
+            </li>
+          </ul>
+        </div>
+      </md-content>
 
-     <div layout="column" layout-fill layout-align="top center">
+      <!-- Chat & Map Container -->
+      <md-content flex layout-padding>
+        <div layout="column" layout-fill layout-align="top center">
+          <div id ="eventContainer" ng-controller="SubheaderAppCtrl" layout="column" flex layout-fill ng-cloak>
+            <md-content md-theme="altTheme">
 
-     <!-- google maps -->
-      <ui-gmap-google-map center='center' zoom='18'>
-        <ui-gmap-marker ng-repeat="m in markers"
-                        coords="m.coords"
-                        idkey="m.id"
-                        options="{icon: m.status}">
-          <ui-gmap-window options="m.markerWindowOptions" closeclick="closeMarkerWindow(m.id)" show="true">
-          <div>{{m.title}}</div>
-          </ui-gmap-window>
-        </ui-gmap-markers>
-      </ui-gmap-google-map>
+              <!-- Map of Friends -->
+              <div>
+                <ul flex id="eventsList" class="font">
+                  <ui-gmap-google-map flex center="center" zoom="18">
+                    <ui-gmap-marker ng-repeat="m in markers" coords="m.coords" idkey="m.id" options="{icon: m.status}">
+                      <ui-gmap-window options="m.markerWindowOptions" closeclick="closeMarkerWindow(m.id)" show="true">
+                        <div>{{m.title}}</div>
+                      </ui-gmap-window>
+                    </ui-gmap-markers>
+                  </ui-gmap-google-map>
+                </ul>
 
-
-
-     <!-- notification Box -->
-<div id = 'eventContainer' ng-controller="SubheaderAppCtrl" layout="column" flex layout-fill ng-cloak>
-  <md-toolbar>
-    <div class="md-toolbar-tools open" style="font-size: 30px;">my events</div>
-  </md-toolbar>
-  <md-content md-theme="altTheme">
-
-  <div ng-if='events.fetch'>
-
-    <ul flex id = 'eventsList' class = 'font'>
-    <h4 class = 'font'> New Events </h4>
-      <li ng-repeat="event in events.list | reverse" style = "list-style: none">
-        <span style = "font-weight: bold" class = 'font' > {{event.username}} wants to {{ event.eventname}} </span>
-        <span> {{event.timestamp.slice(11, 19)}}</span>
-
-        <md-button   ng-click="join(event.id, event.status)" class="md-warn md-raised md-hue-2" class = 'font'> {{event.status}} </md-button>
-       </li>
-
-</ul>
-
- <ul flex id = 'eventsIgoTo'>
- <h4 class = 'font'> Attending! </h4>
-      <li ng-repeat="event in events.eventsIgoTo | reverse" style = "list-style: none">
-        <span style = "font-weight: bold" class = 'font' > I want to {{ event.eventname}} </span>
-        <span> {{event.timestamp.slice(11, 19)}}  </span>
-
-        <md-button   ng-click="join(event.id, event.status)" class="md-warn md-raised md-hue-2 font"> {{event.status}}</md-button>
-       </li>
-
-</ul>
-
+                <!-- Event Chat -->
+                <ul flex id="eventsIgoTo">
+                  <div class="chatroom" ng-controller="ChatController">
+                   <ul>
+                     <li ng-repeat="message in messages track by $index"> {{ message.author }}: {{ message.text }} </li>
+                   </ul>
+                   <form>
+                     <input ng-model="newMessage" type="text" placeholder="Enter a message">
+                     <button ng-click="sendMessage()">Send</button>
+                   </form>
+                  </div>
+                </ul>
+              </div>
+            </md-content>
+          </div>
+        </div>
+      </md-content>
+    </div>
   </div>
-  </md-content>
 </div>
-<!-- Notification END -->
-
-       </div>
-
-     </md-content>
-
- </section>
- </div>
