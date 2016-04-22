@@ -7,7 +7,7 @@
       <h1 style="font-size: 30px; font-weight: bold;" class = "open" ng-click="toggleLeft()"> Open2</h2>
       <span flex></span>
 
-      <md-button class="md-primary md-raised md-hue-2" ng-click="showAdvanced($event)">new event</md-button>
+      <md-button ng-controller="dashboardCtrl" class="md-primary md-raised md-hue-2" ng-click="showAdvanced($event)">new event</md-button>
       <md-button class="md-warn md-raised" ng-click="logout()">logout</md-button>
      </div>
    </md-toolbar>
